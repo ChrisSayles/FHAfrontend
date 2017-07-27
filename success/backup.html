@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="=utf-8">
+    <!-- Latest compiled and minified CSS -->
+    <!--Simple bootstrap style for easier layout -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- CSS link -->
+    <link rel="stylesheet" type="text/css" href="assets/success.css">
+    <!--D3 script-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <title>Team Challenge #2</title>
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Jumbotron for Title -->
+        <div class="jumbotron jumbotron-fluid">
+                <h1 class="text-center"><strong> My Asset Portfolio</strong></h1>
+                <p class="text-center">Helping FHA House America</p>
+                <div class="col-sm-12">
+                    <div class="btn-group" role="group" aria-label="...">
+                    </div>
+                </div>
+            <!-- a new row handles all of the retrieved articles -->
+            
+            <div class="row"> 
+            </div>
+         </div>
+   
+
+
+  </div>
+
+  <div id="chart"></div>
+      <!--D3 script-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script>
+      (function(d3) {
+        'use strict';
+        var dataset = [
+          { state: 'AK', totalamt: 268550},
+          { state: 'Al', totalamt: 149235 },
+          { state: 'AR', totalamt: 143664},
+          { state: 'AZ', totalamt: 190072 }
+        ];
+        var width = 360;
+        var height = 360;
+        var radius = Math.min(width, height) / 2;
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+        var svg = d3.select('#chart')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          .append('g')
+          .attr('transform', 'translate(' + (width / 2) +
+            ',' + (height / 2) + ')');
+        var arc = d3.arc()
+          .innerRadius(0)
+          .outerRadius(radius);
+        var pie = d3.pie()
+          .value(function(d) { return d.totalamt; })
+          .sort(null);
+        var path = svg.selectAll('path')
+          .data(pie(dataset))
+          .enter()
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', function(d) {
+            return color(d.data.state);
+          });
+      })(window.d3);
+
+
+    </script>
+<br>
+    <div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-1"></div>
+  <div style="background-color: #ff3232"  class="col-md-2"><strong>Arizona Total = 190,072</strong></div>
+  <div style="background-color: #4c4cff" class="col-md-2"><strong>Alaska Total = 268,550</strong></div>
+  <div style="background-color: #FF8C00" class="col-md-2"><strong>Alabama Total = 149,235</strong></div>
+  <div style="background-color: #009900" class="col-md-2"><strong>Arkansas Total = 143,664</strong></div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+ 
+    
+
+
+
+<table class='table textcenter'>
+<thead>
+    <tr class='textcenter'>
+      <th class='textcenter'>State</th>
+      <th class='textcenter'>Housing Type</th>
+      <th class='textcenter'>Interest Rate</th>
+      <th class='textcenter'>Total Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alaska</td>
+      <td>Condo</td>
+      <td>4</td>
+      <td>176,540.8</td>
+    </tr>
+     <tr>
+      <td>Alaska</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>288,014.6</td>
+    </tr>
+     <tr>
+      <td>Alaska</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>288,014.6</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Condo</td>
+      <td>4.25</td>
+      <td>99,061</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Rehabilitation</td>
+      <td>4.8</td>
+      <td>124,746.2</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>149,577.4</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Rehabilitation</td>
+      <td>4.5</td>
+      <td>158,102</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Single Family</td>
+      <td>4.1094</td>
+      <td>143,624.1</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.55</td>
+      <td>164,232.7</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.27</td>
+      <td>386,316.1</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Single Family</td>
+      <td>4.31</td>
+      <td>304,050.2</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Rehabilitation</td>
+      <td>5</td>
+      <td>206,974.5</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
+
+
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!--bootstrap javascript-->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--success.js-->
+   <script type="text/javascript" src="assets/success.js"></script>
+
+</body>
+
+</html>

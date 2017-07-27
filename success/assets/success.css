@@ -1,0 +1,41 @@
+
+h1 {
+	color: red;
+	font-size: 50px;
+}
+
+.sortbutton {
+	width: 400px;
+}
+
+.sortboxes {
+	text-align: center;
+}
+
+body {
+  background-color: #DCDCDC;
+  text-align: center;
+}
+
+svg {
+  /*filter: url('#dropshadow');*/
+}
+
+path {
+  cursor: pointer;
+  stroke: #ccc;
+  stroke-width: 0px;
+}
+
+.textcenter {
+	text-align: center;
+}
+
+.fontAwesome {
+  font-family: 'PT Serif', serif;
+}
+
+.jumbotronBG {
+  background-image: url('https://s-static.cinccdn.com/images/uploads/UP8A188C05C6FA41.jpg');
+  background-size: contain;
+}
