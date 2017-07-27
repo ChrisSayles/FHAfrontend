@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="=utf-8">
+    <!-- CSS link -->
+    <link rel="stylesheet" type="text/css" href="assets/success.css">
+    <!--Simple bootstrap style for easier layout -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    
+    <!--D3 script-->
+   <script  type="text/javascript" src="d3.min.js"></script>
+
+    <title>Team Challenge #2</title>
+    
+</head>
+
+<body>
+<style>
+
+body,html{
+	margin: 0;
+	padding: 0;
+	font-size: 0.95em;
+	text-align: center;
+	background-color: #D3D3D3;
+}
+#chart{
+	background-color: #F5F2EB;
+	border: 1px solid #CCC;
+}
+.bar{
+	fill: purple;
+	shape-rendering: crispEdges;
+}
+.bar-label{
+	fill: black;
+	text-anchor:middle;
+	font-size: 24px;
+}
+.axis path,
+.axis line{
+	fill: none;
+	stroke: black;
+	shape-rendering: crispEdges;
+}
+.gridline path,
+.gridline line{
+	fill: none;
+	stroke: grey;
+	shape-rendering: crispEdges;
+}
+
+</style>
+<div class="jumbotron jumbotron-fluid jumbotronBG">
+    <div class="container">
+
+        <!-- Jumbotron for Title -->
+        
+                <h1 class="text-center fontAwesome"><strong> My Asset Portfolio</strong></h1>
+                <p class="text-center">Helping FHA House America</p>
+                <form action="success.html">
+    <input type="submit" value="View Pie Chart" />
+</form>
+
+            <!-- a new row handles all of the retrieved articles -->
+            
+            <div class="row"> 
+            </div>
+         </div>
+   
+
+
+  </div>
+
+</style>
+<!--*************************Place all DOM elements here ****************************************************************** -->
+
+<script>
+var w = 650;
+var h = 600;
+var margin = {
+	top: 50,
+	bottom: 70,
+	left: 100,
+	right: 40
+};
+
+var width = w - margin.left - margin.right;
+var height = h - margin.top - margin.bottom;
+
+
+var data = [
+	{key: "Alaska", value: 268},
+	{key: "Alabama", value: 149},
+	{key: "Arkansas", value: 143},
+	{key: "Arizona", value: 190}
+];
+
+
+
+var x = d3.scale.ordinal()
+		.domain(data.map(function(entry){
+				return entry.key;
+		}))
+		.rangeBands([0,width]);
+
+var y = d3.scale.linear()
+		.domain([0,d3.max(data, function(d){
+			return d.value;
+		})])
+		.range([height, 0]);
+
+
+var linearColorScale = d3.scale.linear()
+		.domain([0, data.length])
+		.range(["#572500", "#F68026"]);
+
+var ordinalColorScale = d3.scale.category20();
+var xAxis = d3.svg.axis()
+			.scale(x)
+			.orient("bottom");
+var yAxis = d3.svg.axis()
+			.scale(y)
+			.tickSize(-width, 0,0)
+			.tickFormat("")
+			.orient("left");
+var yGridlines = d3.svg.axis()
+            .scale(y)
+            .orient("left");
+		
+var svg = d3.select("body").append("svg")
+		.attr("id", "chart")
+		.attr("width", w)
+		.attr("height", h);
+
+var chart = svg.append("g")
+         .classed ("display", true)
+         .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+var controls = d3.select("body")
+		.append("div")
+		.attr("id", "controls");
+
+var sort_btn = controls.append("button")
+		.html("Sort Data: ascending")
+		.attr("state", 0)
+function drawAxis(params){
+	if(params.initialize === true){
+        this.append("g")
+	.call(params.gridlines)
+	.classed("gridline", true)
+	.attr("transform", "translate(0,0)")
+
+	this.append("g")
+			.classed("x axis", true)
+			.attr("transform", "translate("+0+","+ height +")")
+			.call(params.axis.x)
+				.selectAll("text")
+				.classed("x-axis-label", true)
+					.style("text-anchor", "end")
+					.attr("dx", -8)
+					.attr("dy", 8)
+					.attr("transform", "translate(0,0) rotate (-45)");
+
+		this.append("g")
+			.classed("y axis", true)
+			.attr("transform", "translate(0,0)")
+			.call(params.axis.y);
+
+		this.select(".y.axis")
+			.append("text")
+			.attr("x", 0)
+			.attr("y", 0)
+			.style("text-anchor", "middle")
+			.attr("transform", "translate(-80, " + height/2 + ") rotate(-90)")
+			.text("Total");
+
+		this.select(".x.axis")
+			.append("text")
+			.attr("x", 0)
+			.attr("y", 0)
+			.attr("transform", "translate(" + width/2.5+ ",140)")
+			.text("State Name")
+
+	}else if(params.initialize === false){
+        this.selectAll("g.x.axis")
+        .transition()
+        .duration(500)
+        .ease("bounce")
+        .delay(500)
+        	.call(params.axis.x);
+        this.selectAll(".x-axis-label")
+        	.style("text-anchor", "end")
+        	.attr("dx", -8)
+        	.attr("dy", 8)
+        	.attr("transform", "translate(0,0) rotate(-45)");
+        this.selectAll("g.y.axis")
+        .transition()
+        .duration(500)
+        .ease("bounce")
+        .delay(500)
+        .call(params.axis.y);
+	}
+	
+	
+
+}
+function plot(params){
+	x.domain(data.map(function(entry){
+				return entry.key;
+		}));
+	y.domain([0,d3.max(data, function(d){
+			return d.value;
+		})]);
+
+	drawAxis.call(this, params)
+
+
+//enter
+this.selectAll(".bar")
+	.data(params.data)
+	.enter()
+		.append("rect")
+		.classed("bar", true)
+		.on("mouseover", function(d,i){
+			d3.select(this).style("fill", "yellow");
+		})
+		.on("mousemove", function(d,i){
+
+		})
+		.on("mouseout", function(d,i){
+			d3.select(this).style("fill", ordinalColorScale(i));
+		});
+
+this.selectAll(".bar-label")
+	.data(params.data)
+	.enter()
+		.append("text")
+		.classed("bar-label", true);
+		
+
+
+//update
+this.selectAll(".bar")
+        .transition()
+        .duration(500)
+        .ease("bounce")
+        .delay(500)
+		.attr("x", function(d,i){
+			return x(d.key);
+		})
+		//return index * height to stagger the bars
+		.attr("y", function(d,i){
+			return y(d.value);
+		})
+		.attr("width", function(d){
+			return x.rangeBand();
+		})
+		.style("fill", function(d,i){
+			return ordinalColorScale(i);
+		})
+		//set one less than original height to prevent line seperation
+		.attr("height", function(d,i){
+			return height - y(d.value);
+		});
+
+this.selectAll(".bar-label")
+		.transition()
+        .duration(500)
+        .ease("bounce")
+        .delay(500)
+		.attr("x", function(d,i){
+			return x(d.key) + (x.rangeBand()/2)
+		})
+		.attr("y", function(d,i){
+			return y(d.value)
+		})
+		.attr("dy", -6)
+		.attr("dx", 0)
+		.text(function(d,i){
+			return d.value;
+		})
+//exit
+	this.selectAll(".bar")
+	.data(params.data)
+	.exit()
+	.remove();
+
+	this.selectAll(".bar-label")
+	.data(params.data)
+	.exit()
+	.remove();
+
+
+
+
+		
+}
+
+sort_btn.on("click", function(){
+	var self = d3.select(this);
+	var ascending = function(a,b){
+		return a.value -b.value;
+	};
+	var descending = function(a,b){
+		return b.value -a.value;
+	}
+	
+	var state = +self.attr("state");
+	var txt = "Sort Data: ";
+	if(state ===0){
+		data.sort(ascending);
+		state = 1;
+		txt += "descending"
+
+	}else if(state === 1){
+		data.sort(descending);
+		state = 0;
+		txt += "ascending"
+	}
+	
+	self.attr("state", state)
+    self.html(txt)
+
+    plot.call(chart, {
+	data: data,
+	axis:{
+		x: xAxis,
+		y: yAxis
+	},
+	gridlines: yGridlines,
+	initialize: false
+});
+});
+
+plot.call(chart, {
+	data: data,
+	axis:{
+		x: xAxis,
+		y: yAxis
+	},
+	gridlines: yGridlines,
+	initialize: true
+});
+
+
+
+//append rectangle element for each piece of data from line 39
+
+
+
+</script>
+ 
+    
+
+
+
+<table class='table textcenter'>
+<thead>
+    <tr class='textcenter'>
+      <th class='textcenter'>State</th>
+      <th class='textcenter'>Housing Type</th>
+      <th class='textcenter'>Interest Rate</th>
+      <th class='textcenter'>Avg. Mortgage Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alaska</td>
+      <td>Condo</td>
+      <td>4</td>
+      <td>176,540.8</td>
+    </tr>
+     <tr>
+      <td>Alaska</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>288,014.6</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Condo</td>
+      <td>4.25</td>
+      <td>99,061</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Rehabilitation</td>
+      <td>4.8</td>
+      <td>124,746.2</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>149,577.4</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Rehabilitation</td>
+      <td>4.5</td>
+      <td>158,102</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Single Family</td>
+      <td>4.1094</td>
+      <td>143,624.1</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.55</td>
+      <td>164,232.7</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.27</td>
+      <td>386,316.1</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Single Family</td>
+      <td>4.31</td>
+      <td>304,050.2</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Rehabilitation</td>
+      <td>5</td>
+      <td>206,974.5</td>
+    </tr>
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+     <li class="page-item active">
+      <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="#">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">4</a></li>
+    <li class="page-item"><a class="page-link" href="#">5</a></li>
+    <li class="page-item"><a class="page-link" href="#">6</a></li>
+    <li class="page-item"><a class="page-link" href="#">7</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
+
+
+
+
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!--bootstrap javascript-->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--success.js-->
+   <script type="text/javascript" src="assets/success.js"></script>
+
+</body>
+
+</html>

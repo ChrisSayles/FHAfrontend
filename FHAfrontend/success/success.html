@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="=utf-8">
+    <!-- Latest compiled and minified CSS -->
+    <!--Simple bootstrap style for easier layout -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+    <!-- CSS link -->
+    <link rel="stylesheet" type="text/css" href="assets/success.css">
+    <!--D3 script-->
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <title>Team Challenge #2</title>
+    
+</head>
+
+<body>
+<div class="jumbotron jumbotron-fluid jumbotronBG">
+    <div class="container">
+
+        <!-- Jumbotron for Title -->
+        
+                <h1 class="text-center fontAwesome"><strong> My Asset Portfolio</strong></h1>
+                <p class="text-center">Helping FHA House America</p>
+                <form action="barchart.html">
+    <input type="submit" value="View Bar Chart" />
+</form>
+
+            <!-- a new row handles all of the retrieved articles -->
+            
+            <div class="row"> 
+            </div>
+         </div>
+   
+
+
+  </div>
+
+  <script>
+ var data = [
+      {state: 'Alabama', total: 149, totalamt: "149,235", color: '#FF8C00'},
+      {state: 'Arkansas', total: 143, totalamt: "143,664", color: '#009900'},
+      {state: 'Arizona', total: 190, totalamt: "190,072", color: '#ff3232'},
+      {state: 'Alaska',  total: 268, totalamt: "268,550", color: '#4c4cff'},
+
+    ];
+    var totalCount = 112;       //calcuting total manually
+    
+    var width = 540,
+    height = 540,
+    radius = 200;
+
+        var arc = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(100);
+
+        var pie = d3.pie()
+        .sort(null)
+        .value(function(d) {
+            return d.total;
+        });
+
+        var svg = d3.select('body').append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+    var g = svg.selectAll(".arc")
+      .data(pie(data))
+      .enter().append("g");    
+
+    g.append("path")
+        .attr("d", arc)
+      .style("fill", function(d,i) {
+        return d.data.color;
+      });
+
+    g.append("text")
+        .attr("transform", function(d) {
+        var _d = arc.centroid(d);
+        _d[0] *= 1.5;   //multiply by a constant factor
+        _d[1] *= 1.5;   //multiply by a constant factor
+        return "translate(" + _d + ")";
+      })
+      .attr("dy", ".50em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        
+        return d.data.totalamt;
+      });
+
+       g.append("text")
+        .attr("transform", function(d) {
+        var _d = arc.centroid(d);
+        _d[0] *= 1.6;   //multiply by a constant factor
+        _d[1] *= 1.5;   //multiply by a constant factor
+        return "translate(" + _d + ")";
+      })
+      .attr("dy", "-1.0em")
+      .style("text-anchor", "middle")
+      .text(function(d) {
+        
+        return d.data.state;
+      });
+        
+    // g.append("text")
+    //    .attr("text-anchor", "middle")
+    //      .attr('font-size', '4em')
+    //      .attr('y', 20)
+    //    .text(totalCount);
+
+  </script>
+
+
+<br>
+    <div class="row">
+  <div class="col-md-1"></div>
+  <div class="col-md-1"></div>
+  <div style="background-color: #ff3232"  class="col-md-2"><strong>Arizona</strong></div>
+  <div style="background-color: #4c4cff" class="col-md-2"><strong>Alaska</strong></div>
+  <div style="background-color: #FF8C00" class="col-md-2"><strong>Alabama</strong></div>
+  <div style="background-color: #009900" class="col-md-2"><strong>Arkansas</strong></div>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+
+ 
+
+
+
+
+<table class='table textcenter'>
+<thead>
+    <tr class='textcenter'>
+      <th class='textcenter'>State</th>
+      <th class='textcenter'>Housing Type</th>
+      <th class='textcenter'>Interest Rate</th>
+      <th class='textcenter'>Avg. Mortgage Amount</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Alaska</td>
+      <td>Condo</td>
+      <td>4</td>
+      <td>176,540.8</td>
+    </tr>
+     <tr>
+      <td>Alaska</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>288,014.6</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Condo</td>
+      <td>4.25</td>
+      <td>99,061</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Rehabilitation</td>
+      <td>4.8</td>
+      <td>124,746.2</td>
+    </tr>
+     <tr>
+      <td>Alabama</td>
+      <td>Single Family</td>
+      <td>4.02</td>
+      <td>149,577.4</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Rehabilitation</td>
+      <td>4.5</td>
+      <td>158,102</td>
+    </tr>
+     <tr>
+      <td>Arkansas</td>
+      <td>Single Family</td>
+      <td>4.1094</td>
+      <td>143,624.1</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.55</td>
+      <td>164,232.7</td>
+    </tr>
+     <tr>
+      <td>Arizona</td>
+      <td>Condo</td>
+      <td>4.27</td>
+      <td>386,316.1</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Single Family</td>
+      <td>4.31</td>
+      <td>304,050.2</td>
+    </tr>
+     <tr>
+      <td>California</td>
+      <td>Rehabilitation</td>
+      <td>5</td>
+      <td>206,974.5</td>
+    </tr>
+  </tbody>
+</table>
+
+<nav aria-label="Page navigation example">
+  <ul class="pagination">
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Previous">
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Previous</span>
+      </a>
+    </li>
+     <li class="page-item active">
+      <a class="page-link" href="#">1 <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="page-item"><a class="page-link" href="success2.html">2</a></li>
+    <li class="page-item"><a class="page-link" href="#">3</a></li>
+    <li class="page-item"><a class="page-link" href="#">4</a></li>
+    <li class="page-item"><a class="page-link" href="#">5</a></li>
+    <li class="page-item"><a class="page-link" href="#">6</a></li>
+    <li class="page-item"><a class="page-link" href="#">7</a></li>
+    <li class="page-item">
+      <a class="page-link" href="#" aria-label="Next">
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Next</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+
+
+
+
+
+
+
+    <!-- jQuery -->
+    <script type="text/javascript" src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!--bootstrap javascript-->
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <!--success.js-->
+   <script type="text/javascript" src="assets/success.js"></script>
+
+</body>
+
+</html>
